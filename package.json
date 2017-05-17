@@ -1,0 +1,24 @@
+{
+  "name": "bbb-file-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IkwhanChang/bbb-file-manager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IkwhanChang/bbb-file-manager/issues"
+  },
+  "homepage": "https://github.com/IkwhanChang/bbb-file-manager#readme",
+  "dependencies": {
+    "prompt": "^1.0.0",
+    "sdcard": "^0.8.9",
+    "tessel": "^0.3.25"
+  }
+}
