@@ -38,6 +38,8 @@ function check1(){
 function checkButton(x) {
   console.log(x.value);
 }*/
+//var curr_path = "/Volumes/Untitled";
+//var curr_path = "/Users/changmatthew/test";
 var curr_path = "/media/sdcard";
 var mode = "";
 var buffers = [];
@@ -53,7 +55,7 @@ process.stdin.on('keypress', (str, key) => {
     console.log(key);
     console.log();*/
     console.log('\033[2J');
-    console.log("=========== File Lists ==========");
+    console.log("=========== File Lists =========="+noOfFile+" "+selected_x);
     console.log("Current Path: "+curr_path);
     folderList(curr_path);
     mode = "";
@@ -69,7 +71,7 @@ process.stdin.on('keypress', (str, key) => {
             noOfFile =0 ;
             curr_path += "/"+selected_file;
             console.log('\033[2J');
-            console.log("=========== File Lists ==========");
+            console.log("=========== File Lists =========="+noOfFile);
             console.log("Current Path: "+curr_path);
             folderList(curr_path);
           }
@@ -78,7 +80,7 @@ process.stdin.on('keypress', (str, key) => {
         break;
       case "left":
         mode = "PASTE";
-        pasteFiles(curr_path);
+        pasteFiles(selected_file, curr_path);
         noOfFile++;
         console.log(selected_file+" Pasted!");
         console.log('\033[2J');
@@ -98,7 +100,7 @@ process.stdin.on('keypress', (str, key) => {
         break;
       case "down":
         selected_x++;
-        if(noOfFile > selected_x) selected_x--;
+        if(noOfFile <= selected_x) selected_x--;
         console.log("down");
         break;
     }
@@ -108,7 +110,7 @@ console.log('Press any button...');
 
 const emptyDir = require('empty-dir');
 
-//setInterval(check2,100);
+setInterval(check2,100);
 var isPrinted = false;
 function check2() {
   if (!emptyDir.sync("/Volumes/Untitled") && fs.existsSync("/Volumes/Untitled")) {
