@@ -1,6 +1,7 @@
-var b = require('bonescript');
+//var b = require('bonescript');
 var fs = require('fs');
 var path = require('path');
+var readline = require('readline');
 /*
 var tessel = require('tessel');
 var sdcardlib = require('sdcard');
@@ -26,76 +27,119 @@ sdcard.on('ready', function() {
 });
 */
 
-b.pinMode('P8_15', b.INPUT);
+// Copy (Folder List -> Select -> Buffer)
+/*b.pinMode('P8_15', b.INPUT);
 
-setInterval(check,1000);
-function check(){
+setInterval(check2,1000);
+function check1(){
   b.digitalRead('P8_15', checkButton);
 }
 
 function checkButton(x) {
   console.log(x.value);
-}
+}*/
+var curr_path = "/media/sdcard";
+var mode = "";
+var buffers = [];
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
+process.stdin.on('keypress', (str, key) => {
 
+  if (key.ctrl && key.name === 'c') {
+    process.exit();
+  } else {
+    /*console.log(`You pressed the "${str}" key`);
+    console.log();
+    console.log(key);
+    console.log();*/
+    console.log('\033[2J');
+    console.log("=========== File Lists ==========");
+    console.log("Current Path: "+curr_path);
+    folderList(curr_path);
+    mode = "";
+    switch(key.name){
+      case "return":
+        mode = "ENTER";
 
+        if(selected_file !== undefined){
+          if(!fs.lstatSync(curr_path+"/"+selected_file).isDirectory()){
+            console.log("It is not a directory!");
+          }else{
+            selected_x = 0;
+            noOfFile =0 ;
+            curr_path += "/"+selected_file;
+            console.log('\033[2J');
+            console.log("=========== File Lists ==========");
+            console.log("Current Path: "+curr_path);
+            folderList(curr_path);
+          }
+        }
 
+        break;
+      case "left":
+        mode = "PASTE";
+        pasteFiles(curr_path);
+        noOfFile++;
+        console.log(selected_file+" Pasted!");
+        console.log('\033[2J');
+        console.log("=========== File Lists ==========");
+        console.log("Current Path: "+curr_path);
+        folderList(curr_path);
+        break;
+      case "right":
+        mode = "COPY_1";
+        copyFile(selected_file, curr_path);
+        console.log(selected_file+" Copied!");
+        break;
+      case "up":
+        console.log("up");
+        selected_x--;
+        if(0 > selected_x) selected_x = 0;
+        break;
+      case "down":
+        selected_x++;
+        if(noOfFile > selected_x) selected_x--;
+        console.log("down");
+        break;
+    }
+  }
+});
+console.log('Press any button...');
 
 const emptyDir = require('empty-dir');
 
-setInterval(check,100);
+//setInterval(check2,100);
 var isPrinted = false;
-function check() {
-
-  if (!emptyDir.sync("/media/sdcard") && fs.existsSync("/media/sdcard") && !isPrinted) {
+function check2() {
+  if (!emptyDir.sync("/Volumes/Untitled") && fs.existsSync("/Volumes/Untitled")) {
+  //if (!emptyDir.sync("/media/sdcard") && fs.existsSync("/media/sdcard") && !isPrinted) {
       //folderList("/Volumes/Untitled");
-      isPrinted = true;
-      walk("/media/sdcard", function(err, results) {
-        if (err) throw err;
-        console.log(results);
+      folderList("/media/sdcard");
 
-
-      });
-      console.log(isPrinted);
-
-  }else{
-    isPrinted = false;
   }
 }
 
-var walk = function(dir, done) {
-  var results = [];
-  fs.readdir(dir, function(err, list) {
-    if (err) return done(err);
-    var pending = list.length;
-    if (!pending) return done(null, results);
-    list.forEach(function(file) {
-      file = path.resolve(dir, file);
-      fs.stat(file, function(err, stat) {
-        if (stat && stat.isDirectory()) {
-          walk(file, function(err, res) {
-            results = results.concat(res);
-            if (!--pending) done(null, results);
-          });
-        } else {
-          results.push(file);
-          if (!--pending) done(null, results);
-        }
-      });
-    });
-  });
-};
-
-
+var selected_x = 0;
+var selected_file;
+var noOfFile = 0;
 // Read folder
 function folderList(location){
 
     fs.readdir(location, (err, files) => {
+      var i = 0;
       if(files !== undefined){
         files.forEach(file => {
-          console.log(file);
+          if(i === selected_x){
+              console.log("[x]"+file);
+              selected_file = file;
+          }else{
+              console.log("[ ]"+file);
+          }
+          i++;
+
         });
       }
-
+      noOfFile = i;
     })
 }
 
