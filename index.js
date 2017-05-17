@@ -1,4 +1,4 @@
-//var b = require('bonescript');
+var b = require('bonescript');
 var fs = require('fs');
 var path = require('path');
 /*
@@ -26,39 +26,40 @@ sdcard.on('ready', function() {
 });
 */
 
+b.pinMode('P8_15', b.INPUT);
+
+setInterval(check,1000);
+function check(){
+  b.digitalRead('P8_15', checkButton);
+}
+
+function checkButton(x) {
+  console.log(x.value);
+}
+
+
+
+
 const emptyDir = require('empty-dir');
 
-emptyDir('/media/sdcard', function (err, result) {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('Directory is empty:', result);
-    if(!result){
-      if (fs.existsSync("/media/sdcard") && !isPrinted) {
-          //folderList("/Volumes/Untitled");
-          isPrinted = true;
-          walk("/media/sdcard", function(err, results) {
-            if (err) throw err;
-            console.log(results);
-
-
-          });
-          console.log(isPrinted);
-
-      }else{
-        isPrinted = false;
-      }
-    }else{
-      console.log("empty");
-    }
-  }
-});
-
-//setInterval(check,1000);
-
+setInterval(check,100);
 var isPrinted = false;
 function check() {
 
+  if (!emptyDir.sync("/media/sdcard") && fs.existsSync("/media/sdcard") && !isPrinted) {
+      //folderList("/Volumes/Untitled");
+      isPrinted = true;
+      walk("/media/sdcard", function(err, results) {
+        if (err) throw err;
+        console.log(results);
+
+
+      });
+      console.log(isPrinted);
+
+  }else{
+    isPrinted = false;
+  }
 }
 
 var walk = function(dir, done) {
