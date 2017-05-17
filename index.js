@@ -39,8 +39,8 @@ function checkButton(x) {
   console.log(x.value);
 }*/
 //var curr_path = "/Volumes/Untitled";
-var curr_path = "/Users/changmatthew/test";
-//var curr_path = "/media/sdcard";
+//var curr_path = "/Users/changmatthew/test";
+var curr_path = "/media/sdcard";
 var mode = "";
 var buffers = [];
 readline.emitKeypressEvents(process.stdin);
