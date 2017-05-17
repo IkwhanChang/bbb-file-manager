@@ -39,8 +39,8 @@ function checkButton(x) {
   console.log(x.value);
 }*/
 //var curr_path = "/Volumes/Untitled";
-//var curr_path = "/Users/changmatthew/test";
-var curr_path = "/media/sdcard";
+var curr_path = "/Users/changmatthew/test";
+//var curr_path = "/media/sdcard";
 var mode = "";
 var buffers = [];
 readline.emitKeypressEvents(process.stdin);
@@ -80,7 +80,7 @@ process.stdin.on('keypress', (str, key) => {
         break;
       case "left":
         mode = "PASTE";
-        pasteFiles(selected_file, curr_path);
+        pasteFiles(curr_path);
         noOfFile++;
         console.log(selected_file+" Pasted!");
         console.log('\033[2J');
@@ -169,7 +169,7 @@ function copyFiles(fileNames, path){
 // paste files
 function pasteFiles(destFolder){
   buffers.forEach(function(file){
-    fs.createReadStream(file.path).pipe(fs.createWriteStream(destFolder+"/"+file.fileName));
+    fs.createReadStream(file.path+"/"+file.fileName).pipe(fs.createWriteStream(destFolder+"/"+file.fileName));
   });
 
   buffers = [];
