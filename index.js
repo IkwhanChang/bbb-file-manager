@@ -26,24 +26,39 @@ sdcard.on('ready', function() {
 });
 */
 
-setInterval(check,1000);
+const emptyDir = require('empty-dir');
+
+emptyDir('/media/sdcard', function (err, result) {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Directory is empty:', result);
+    if(!result){
+      if (fs.existsSync("/media/sdcard") && !isPrinted) {
+          //folderList("/Volumes/Untitled");
+          isPrinted = true;
+          walk("/media/sdcard", function(err, results) {
+            if (err) throw err;
+            console.log(results);
+
+
+          });
+          console.log(isPrinted);
+
+      }else{
+        isPrinted = false;
+      }
+    }else{
+      console.log("empty");
+    }
+  }
+});
+
+//setInterval(check,1000);
 
 var isPrinted = false;
 function check() {
-  if (fs.existsSync("/Volumes/Untitled") && !isPrinted) {
-      //folderList("/Volumes/Untitled");
-      isPrinted = true;
-      walk("/Volumes/Untitled", function(err, results) {
-        if (err) throw err;
-        console.log(results);
 
-
-      });
-      console.log(isPrinted);
-
-  }else{
-    isPrinted = false;
-  }
 }
 
 var walk = function(dir, done) {

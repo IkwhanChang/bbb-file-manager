@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/IkwhanChang/bbb-file-manager#readme",
   "dependencies": {
+    "empty-dir": "^0.2.1",
     "prompt": "^1.0.0",
     "sdcard": "^0.8.9",
     "tessel": "^0.3.25"
